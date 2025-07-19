@@ -13,7 +13,7 @@ const useFetchUser = () => {
   const fetchData = async () => {
     if (user) return;
 
-    dispatch(userStart());
+    // dispatch(userStart());
     try {
       const userData = await fetchLoggedInUser();
       dispatch(addUser(userData));
@@ -22,7 +22,7 @@ const useFetchUser = () => {
       if (err?.response?.status === 401) {
         navigate("/login");
       } else {
-        toast.error("Failed to load user");
+        // toast.error("Failed to load user");
       }
     }
   };

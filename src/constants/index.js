@@ -1,2 +1,3 @@
+console.log(import.meta.env.VITE_BACKEND_URL);
 export const BASE_URL =
-  location.hostname === "localhost" ? "http://localhost:7777" : "/api";
+  import.meta.env.VITE_BACKEND_URL ;
