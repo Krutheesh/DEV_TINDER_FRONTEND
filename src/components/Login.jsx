@@ -1,117 +1,124 @@
-import { useState } from "react";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { addUser } from "../utils/userSlice";
-import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/constants";
 
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import { Eye, EyeOff } from "lucide-react";
 const Login = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
-  const [error, setError] = useState("");
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    try {
-      const res = await axios.post(
-        BASE_URL + "/login",
-        {
-          emailId,
-          password,
-        },
-        { withCredentials: true }
-      );
-      dispatch(addUser(res.data));
-      return navigate("/");
-    } catch (err) {
-      setError(err?.response?.data || "Something went wrong");
-    }
-  };
+  const [showPassword, setShowPassword] = useState(false);
+  const { handleLogin, handleSignUp } = useAuth();
+  const { error, loading } = useSelector((state) => state.auth);
 
-  const handleSignUp = async () => {
-    try {
-      const res = await axios.post(
-        BASE_URL + "/signup",
-        { firstName, lastName, emailId, password },
-        { withCredentials: true }
-      );
-      dispatch(addUser(res.data.data));
-      return navigate("/profile");
-    } catch (err) {
-      setError(err?.response?.data || "Something went wrong");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isLoginForm) {
+      console.log("Logging in with:", { emailId, password });
+       handleLogin({ emailId, password });
+    } else {
+     handleSignUp({ firstName, lastName, emailId, password });
     }
   };
 
   return (
     <div className="flex justify-center my-10">
-      <div className="card bg-base-300 w-96 shadow-xl">
+      <div className="card bg-base-300 mb-[10%] w-96 ">
         <div className="card-body">
           <h2 className="card-title justify-center">
             {isLoginForm ? "Login" : "Sign Up"}
           </h2>
-          <div>
+
+          <form onSubmit={handleSubmit}>
             {!isLoginForm && (
               <>
                 <label className="form-control w-full max-w-xs my-2">
                   <div className="label">
-                    <span className="label-text">First Name</span>
+                    <span className="label-text" htmlFor="firstName">First Name</span>
                   </div>
                   <input
                     type="text"
+                    id="firstName"
                     value={firstName}
                     className="input input-bordered w-full max-w-xs"
                     onChange={(e) => setFirstName(e.target.value)}
+                    required
                   />
                 </label>
+
                 <label className="form-control w-full max-w-xs my-2">
                   <div className="label">
-                    <span className="label-text">Last Name</span>
+                    <span className="label-text" htmlFor="lastName">Last Name</span>
                   </div>
                   <input
                     type="text"
+                    id="lastName"
                     value={lastName}
                     className="input input-bordered w-full max-w-xs"
                     onChange={(e) => setLastName(e.target.value)}
+                    required
                   />
                 </label>
               </>
             )}
+
             <label className="form-control w-full max-w-xs my-2">
               <div className="label">
-                <span className="label-text">Email ID:</span>
+                <span className="label-text" htmlFor="emailId">Email ID:</span>
               </div>
               <input
-                type="text"
+                type="email"
+                id="emailId"
                 value={emailId}
                 className="input input-bordered w-full max-w-xs"
                 onChange={(e) => setEmailId(e.target.value)}
+                required
               />
             </label>
-            <label className="form-control w-full max-w-xs my-2">
-              <div className="label">
-                <span className="label-text">Password</span>
-              </div>
-              <input
-                type="password"
-                value={password}
-                className="input input-bordered w-full max-w-xs"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </label>
-          </div>
-          <p className="text-red-500">{error}</p>
-          <div className="card-actions justify-center m-2">
-            <button
-              className="btn btn-primary"
-              onClick={isLoginForm ? handleLogin : handleSignUp}
-            >
-              {isLoginForm ? "Login" : "Sign Up"}
-            </button>
-          </div>
+
+            <label className="form-control w-full max-w-xs my-2 relative">
+  <div className="label">
+    <span className="label-text" htmlFor="password">Password</span>
+  </div>
+  <input
+    type={showPassword ? "text" : "password"}
+    id="password"
+    value={password}
+    className="input input-bordered w-full max-w-xs pr-10"
+    onChange={(e) => setPassword(e.target.value)}
+    required
+  />
+  <span
+    className="absolute right-3 top-12 cursor-pointer"
+    onClick={() => setShowPassword((prev) => !prev)}
+  >
+    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+  </span>
+</label>
+
+
+            {error && (
+              <p className="text-red-500 text-sm text-center mt-1">{error}</p>
+            )}
+
+            <div className="card-actions justify-center mt-8  ">
+              <button
+                className={`btn btn-primary w-full ${loading ? "btn-disabled" : ""}`}
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="loading loading-spinner loading-sm"></span>
+                ) : (
+                  isLoginForm ? "Login" : "Sign Up"
+                )}
+              </button>
+            </div>
+          </form>
 
           <p
             className="m-auto cursor-pointer py-2"
@@ -126,4 +133,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;
