@@ -20,6 +20,7 @@ const useFetchUser = () => {
     } catch (err) {
       dispatch(userFailure(null));
       if (err?.response?.status === 401) {
+        console.log("navigate to login");
         navigate("/login");
       } else {
         // toast.error("Failed to load user");
