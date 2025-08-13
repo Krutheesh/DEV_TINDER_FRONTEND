@@ -26,14 +26,7 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("User data:", user);
-    console.log(user)
- if(user && user._id) {
-      navigate("/");
-    }
-  },[user]
-)
+ 
   return (
     <div className="flex justify-center my-10">
       <div className="card bg-base-300 mb-[10%] w-96 ">
