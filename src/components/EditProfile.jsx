@@ -14,8 +14,8 @@ const EditProfile = ({ user }) => {
   const updateProfile = useEditProfile();
   const { error } = useSelector((state) => state.auth);
 
-  const saveProfile = async () => {
-    await updateProfile({ firstName, lastName, photoUrl, age, gender, about });
+  const saveProfile =  () => {
+   updateProfile({ firstName, lastName, photoUrl, age, gender, about });
   };
 
   return (
