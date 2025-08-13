@@ -30,8 +30,9 @@ const useAuth = () => {
       dispatch(addUser(userData));
       navigate("/profile");
     } catch (err) {
+      console.log(err?.response?.data?.error)
       dispatch(userFailure(err?.response?.data?.error || "Signup failed"));
-      toast.error(err?.response?.data || "Signup failed");
+      // toast.error(err?.response?.data?.error || "Signup failed");
     }
   };
 

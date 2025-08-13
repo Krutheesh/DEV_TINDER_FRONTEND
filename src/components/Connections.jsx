@@ -32,9 +32,9 @@ const Connections = () => {
               <p>{about}</p>
             </div>
           </div>
-          {/* <Link to={"/chat/" + _id}>
+          <Link to={"/chat/" + _id}>
             <button className="btn btn-primary">Chat</button>
-          </Link> */}
+          </Link>
         </div>
       ))}
     </div>
