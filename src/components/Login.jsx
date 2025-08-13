@@ -1,10 +1,11 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { Eye, EyeOff } from "lucide-react";
 const Login = () => {
+  const navigate = useNavigate();
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -13,7 +14,7 @@ const Login = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const { handleLogin, handleSignUp } = useAuth();
-  const { error, loading } = useSelector((state) => state.auth);
+  const { error, loading,user } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,6 +26,14 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    console.log("User data:", user);
+    console.log(user)
+ if(user && user._id) {
+      navigate("/");
+    }
+  },[user]
+)
   return (
     <div className="flex justify-center my-10">
       <div className="card bg-base-300 mb-[10%] w-96 ">
